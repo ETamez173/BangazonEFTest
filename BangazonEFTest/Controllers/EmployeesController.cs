@@ -20,6 +20,8 @@ namespace BangazonEFTest.Controllers
         // _context represent the Database and we now have access to it 
         // DI makes things very testable and flexible
         // Our controllers have a have reference to our database via the context field
+
+        // Design pattern --- This is a Dependancy Injection Design Pattern EFTEst_Intro_P5 at 1 min point
         private readonly ApplicationDbContext _context;
 
         public EmployeesController(ApplicationDbContext context)
@@ -62,6 +64,8 @@ namespace BangazonEFTest.Controllers
             // See EFTest_intro_p3 around 34min pnt
 
             var allComputers = await _context.Computer
+                // filter computers
+                .Where(c => c.DecomissionDate == null && c.Employee == null)
                 .Select(d => new SelectListItem() { Text = d.Model, Value = d.Id.ToString() })
                 .ToListAsync();
             var allDepartments = await _context.Department
@@ -162,12 +166,14 @@ namespace BangazonEFTest.Controllers
                     Email = employeeViewModel.Email,
                     ComputerId = employeeViewModel.ComputerId,
                     DepartmentId = employeeViewModel.DepartmentId,
+                    // remember to get all the properties in before I update wont allow if not all there
+                    // not like doing a PATCH where I could specify only items I wanted to change in record
 
                 };
 
                 _context.Employee.Update(employee);
                 await _context.SaveChangesAsync();
-                // promises in JS where for fetch calls
+                // we used promises in JS when we did fetch calls
                 // the burger example
 
 
@@ -181,18 +187,23 @@ namespace BangazonEFTest.Controllers
 
 
         // GET: EmployeesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var employee = await _context.Employee.FirstOrDefaultAsync(e => e.Id == id);
+            
+            return View(employee);
         }
 
         // POST: EmployeesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, Employee employee)
         {
             try
             {
+                _context.Employee.Remove(employee);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             catch
