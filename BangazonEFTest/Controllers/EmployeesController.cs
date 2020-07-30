@@ -41,14 +41,15 @@ namespace BangazonEFTest.Controllers
                 .ToList();
 
             return View(employees);
+            //return Ok(employees);
         }
 
         // GET: EmployeesController/Details/5
         public ActionResult Details(int id)
         {
-            //var employee = _context.Employee;
-                //.Include(e => e.Computer)
-                //.Include(e => e.Department);
+            var employee = _context.Employee
+            .Include(e => e.Computer)
+            .Include(e => e.Department);
 
             return View();
         }
@@ -120,6 +121,7 @@ namespace BangazonEFTest.Controllers
         {
 
             var allComputers = await _context.Computer
+                //.Where(c => c.DecomissionDate != null && c.Employee == null)
                  .Select(c => new SelectListItem() { Text = c.Model, Value = c.Id.ToString() })
                  .ToListAsync();
 
