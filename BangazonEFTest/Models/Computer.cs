@@ -18,9 +18,11 @@ namespace BangazonEFTest.Models
         [Required]
         public string Model { get; set; }
 
+        [Display(Name = "Purchase Date")]
         [Required]
         public DateTime PurchaseDate { get; set; }
 
+        [Display(Name = "Decomission Date")]
         public DateTime? DecomissionDate { get; set; }
 
         public Employee Employee { get; set; }

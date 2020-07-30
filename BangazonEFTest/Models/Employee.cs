@@ -11,19 +11,26 @@ namespace BangazonEFTest.Models
         [Required]
         public int Id { get; set; }
 
-        [Required]
+        [Display(Name = "First Name")]
+        [Required(ErrorMessage = "First Name is required!")]
+        [MinLength(2, ErrorMessage = "First Name should be at least 2 characters long")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Last Name is required!")]
+        [MinLength(3, ErrorMessage = "Last Name should be at least 3 characters long")]
         public string LastName { get; set; }
 
+        [Display(Name = "Email")]
         [Required]
         public string Email { get; set; }
 
+        [Display(Name = "Department")]
         [Required]
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
 
+        [Display(Name = "Assigned Computer")]
         [Required]
         public int ComputerId { get; set; }
         public Computer Computer { get; set; }
